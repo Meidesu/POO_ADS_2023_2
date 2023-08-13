@@ -1,4 +1,5 @@
 
 # Exercício 01
 
-![Classes UML](01_exercicio\ClasseUML.png)
+10. Classes em UML
+    ![Classes UML](./ClasseUML.png)
