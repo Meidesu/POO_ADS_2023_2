@@ -1,35 +1,27 @@
+"use strict";
 // class Conta {
 //   numero: String;
 //   saldo: number;
 //   nome: string;
-
 //   constructor(numero: String, saldo: number, nome: string) {
 //     this.numero = numero;
 //     this.saldo = saldo;
 //     this.nome = this.nome
 //   }
-
 //   sacar(valor: number): void {
-
-
 //     this.saldo = this.saldo - valor;
 //   }
-
 //   depositar(valor: number): void {
 //     this.saldo = this.saldo + valor;
 //   }
-
 //   consultarSaldo(): number {
 //     return this.saldo;
 //   }
-
 //   transferir(contaDestino: Conta, valor: number): void {
 //     this.sacar(valor);
 //     contaDestino.depositar(valor);
 //   }
 // }
-
-
 // let c1: Conta = new Conta("1",100);
 // let c2: Conta = new Conta("2",100);
 // let c3: Conta;

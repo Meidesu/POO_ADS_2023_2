@@ -66,3 +66,8 @@ var arrayDobrado = array.map(function (x) { return x * 2; });
 console.log(arrayDobrado, '\n');
 var somaArray = array.reduce(function (sum, x) { return sum + x; });
 console.log(somaArray, '\n');
+// // 10.
+// const sensores = [1,2,3,4,5,6,7,1,2,3,4,5,1023,31231,1231]
+// function obter_max(array: numbers[]): number{
+//   return numbers.reduce((acc, init, 0) => {acc + init})
+// }
