@@ -65,7 +65,7 @@ function consultar() {
   console.log(' Consultar conta\n');
 
   let numConta: string = question(' Informe o numero da conta: ');
-  let conta: Conta = b.consultar(numConta);
+  let conta: Conta|null = b.consultar(numConta);
   
   let texto = `Conta não encontrada!!`
 
@@ -84,7 +84,7 @@ function sacar() {
   let numConta: string = question(' Informe o numero da conta: ');
   let valorSaque: number = Number(question(' Valor a sacar: '))
 
-  let conta: Conta = b.consultar(numConta);
+  let conta: Conta|null = b.consultar(numConta);
   let texto = `Conta não encontrada!!`
 
   if ( conta != null ){
@@ -92,7 +92,7 @@ function sacar() {
 
     texto = `
   Saque feito com sucesso!!
-  Saldo atual: ${conta.consultarSaldo()}  
+  Saldo atual: ${conta.saldo}  
   `
   } 
 
@@ -106,7 +106,7 @@ function depositar() {
   let numConta: string = question(' Informe o numero da conta: ');
   let valorDeposito: number = Number(question(' Valor do deposito: '));
 
-  let conta: Conta = b.consultar(numConta);
+  let conta: Conta|null = b.consultar(numConta);
   let texto = `Conta não encontrada!!`;
 
   if ( conta != null ){
@@ -114,7 +114,7 @@ function depositar() {
 
     texto = `
   Deposito feito com sucesso!!
-  Saldo atual: ${conta.consultarSaldo()}  
+  Saldo atual: ${conta.saldo}  
   `;
   } 
 

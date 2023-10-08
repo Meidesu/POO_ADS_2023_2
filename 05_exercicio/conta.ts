@@ -1,32 +1,32 @@
 export class Conta {
   numero: string;
   nome: string
-  saldo: number;
+  private _saldo: number;
 
   constructor(numero: string, nome: string, saldo: number = 0) {
       this.numero = numero;
       this.nome = nome;
-      this.saldo = saldo;
+      this._saldo = saldo;
   }
 
-  depositar(valor: number): void {
-      this.saldo = this.saldo + valor;
+  public depositar(valor: number): void {
+      this._saldo = this._saldo + valor;
   }
 
-  sacar(valor: number): boolean {
-      if (this.saldo - valor < 0) {
+  public sacar(valor: number): boolean {
+      if (this._saldo - valor < 0) {
           return false;
       }
 
-      this.saldo = this.saldo - valor;
+      this._saldo = this._saldo - valor;
       return true;
   }
 
-  consultarSaldo(): number {
-      return this.saldo;
+  public get saldo(): number {
+      return this._saldo;
   }
 
-  transferir(contaDestino: Conta, valor: number): boolean {
+  public transferir(contaDestino: Conta, valor: number): boolean {
       if (!this.sacar(valor)) {
           return false;
       }
@@ -35,11 +35,11 @@ export class Conta {
       return true;
   }
 
-  toString () {
+  public toString () {
     return `
     Numero da conta: ${this.numero}
     Nome do titular: ${this.nome}
-    Saldo em conta: ${this.saldo}
+    Saldo em conta: ${this._saldo}
     `
   }
 }

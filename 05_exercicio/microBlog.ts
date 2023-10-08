@@ -38,8 +38,8 @@ class Blog {
     }
   }
 
-  consutar (id: number): Postagem {
-    let postProcurado: Postagem = null;
+  consutar (id: number): Postagem|null {
+    let postProcurado: Postagem|null = null;
 
     for ( let post of this.postagens ){
       if ( post.id == id ){
@@ -77,7 +77,7 @@ class Blog {
   }
 
   curtirPostagem (id: number): void {
-    let post: Postagem = this.consutar(id);
+    let post: Postagem|null = this.consutar(id);
 
     if ( post != null ){
       post.curtir();
@@ -97,18 +97,18 @@ class Blog {
 }
 
 
-let b: Blog = new Blog()
+let blog: Blog = new Blog()
 
-b.postar(new Postagem(1, "blá blá blá", 5))
-b.postar(new Postagem(2, "labira", 7))
-b.postar(new Postagem(3, "blosonaro", 2))
-b.curtirPostagem(2)
+blog.postar(new Postagem(1, "blá blá blá", 5))
+blog.postar(new Postagem(2, "labira", 7))
+blog.postar(new Postagem(3, "blosonaro", 2))
+blog.curtirPostagem(2)
 
-// console.log(b.consutar(1));
-// console.log("Mais curtido:" ,b.maisCurtida());
-b.excluir(1)
+// console.log(blog.consutar(1));
+// console.log("Mais curtido:" ,blog.maisCurtida());
+blog.excluir(1)
 
 console.clear()
-console.log(b.exibirPagina());
+console.log(blog.exibirPagina());
 
 // console.log(b.postagens);

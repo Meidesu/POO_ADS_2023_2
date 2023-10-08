@@ -5,26 +5,26 @@ let banco: Conta[] = [];
 banco[0] = conta1;
 
 banco.push(new Conta("2", 100));
-console.log(banco[1].consultarSaldo());
+console.log(banco[1].saldo);
 
 console.log(banco[10].saldo);
 */
 
 export class Banco {
-    contas: Conta[] = []
+    private _contas: Conta[] = []
 
-    inserir(conta: Conta): void {      
+    public inserir(conta: Conta): void {      
       if ( this.consultar(conta.numero) == null){
-        this.contas.push(conta);
+        this._contas.push(conta);
       }
     }
 
-    consultar(numero: string): Conta {
-        let contaProcurada: Conta = null;
+    public consultar(numero: string): Conta|null {
+        let contaProcurada: Conta|null = null;
 
-        for (let i: number = 0; i < this.contas.length; i++) {
-            if (this.contas[i].numero == numero) {
-                contaProcurada = this.contas[i];
+        for (let i: number = 0; i < this._contas.length; i++) {
+            if (this._contas[i].numero == numero) {
+                contaProcurada = this._contas[i];
                 break;
             }
         }
@@ -32,11 +32,11 @@ export class Banco {
         return contaProcurada;
     }
 
-    consultarPorIndice(numero: string): number {
+    private _consultarPorIndice(numero: string): number {
         let indiceProcurado: number = -1;
 
-        for (let i: number = 0; i < this.contas.length; i++) {
-            if (this.contas[i].numero == numero) {
+        for (let i: number = 0; i < this._contas.length; i++) {
+            if (this._contas[i].numero == numero) {
                 indiceProcurado = i;
                 break;
             }
@@ -45,66 +45,66 @@ export class Banco {
         return indiceProcurado;
     }
 
-    alterar(conta: Conta): void {
+    public alterar(conta: Conta): void {
         let indiceProcurado: number =
-                this.consultarPorIndice(conta.numero);
+                this._consultarPorIndice(conta.numero);
         
         if (indiceProcurado != -1) {
-            this.contas[indiceProcurado] = conta;
+            this._contas[indiceProcurado] = conta;
         }
     }
 
-    excluir(numero: string): void {
-        let indiceProcurado = this.consultarPorIndice(numero);
+    public excluir(numero: string): void {
+        let indiceProcurado = this._consultarPorIndice(numero);
 
         if (indiceProcurado != -1) {
-            for (let i = indiceProcurado; i < this.contas.length; i++) {
-                this.contas[i] = this.contas[i+1];
+            for (let i = indiceProcurado; i < this._contas.length; i++) {
+                this._contas[i] = this._contas[i+1];
             }
-            this.contas.pop();
+            this._contas.pop();
             
         }
     }
 
-    sacar(numero: string, valor: number): void {
-        let indiceProcurado: number = this.consultarPorIndice(numero);
+    public sacar(numero: string, valor: number): void {
+        let indiceProcurado: number = this._consultarPorIndice(numero);
 
         if (indiceProcurado != -1) { //Achou uma conta
-            let conta: Conta = this.contas[indiceProcurado];    
+            let conta: Conta = this._contas[indiceProcurado];    
             conta.sacar(valor);
         }
     }
 
-    transferir (numeroCredito: string, numeroDebito: string, valor: number): void{
-      let indiceOrigem: number = this.consultarPorIndice(numeroDebito)
-      let indiceDestino: number = this.consultarPorIndice(numeroCredito)
+    public transferir (numeroCredito: string, numeroDebito: string, valor: number): void{
+      let indiceOrigem: number = this._consultarPorIndice(numeroDebito)
+      let indiceDestino: number = this._consultarPorIndice(numeroCredito)
 
       if ( indiceDestino != -1 && indiceOrigem != -1){
-        let contaDestino: Conta = this.contas[indiceDestino] 
-        let contaOrigem: Conta = this.contas[indiceOrigem]
+        let contaDestino: Conta = this._contas[indiceDestino] 
+        let contaOrigem: Conta = this._contas[indiceOrigem]
 
         contaOrigem.transferir(contaDestino, valor)
       }
 
     }
 
-    qtdContas (): number{
-      let qtd = this.contas.length
+    public qtdContas (): number{
+      let qtd = this._contas.length
 
       return qtd;
     }
 
-    saldoBanco (): number{
+    public saldoBanco (): number{
       let total: number = 0;
 
-      for (let conta of this.contas){
-        total += conta.consultarSaldo();
+      for (let conta of this._contas){
+        total += conta.saldo;
       }
 
       return total;
     }
 
-    mediaSaldo (): number {
+    public mediaSaldo (): number {
       return this.saldoBanco() / this.qtdContas()
     }
 }
@@ -136,5 +136,6 @@ console.log("Contas no banco:" ,b.qtdContas());
 console.log("Média:", b.mediaSaldo());
 
 
-
-console.log(b.contas); */
+*/
+// let b: Banco = new Banco();
+// console.log(b.contas); 

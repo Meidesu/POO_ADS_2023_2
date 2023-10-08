@@ -6,21 +6,25 @@ var Conta = /** @class */ (function () {
         if (saldo === void 0) { saldo = 0; }
         this.numero = numero;
         this.nome = nome;
-        this.saldo = saldo;
+        this._saldo = saldo;
     }
     Conta.prototype.depositar = function (valor) {
-        this.saldo = this.saldo + valor;
+        this._saldo = this._saldo + valor;
     };
     Conta.prototype.sacar = function (valor) {
-        if (this.saldo - valor < 0) {
+        if (this._saldo - valor < 0) {
             return false;
         }
-        this.saldo = this.saldo - valor;
+        this._saldo = this._saldo - valor;
         return true;
     };
-    Conta.prototype.consultarSaldo = function () {
-        return this.saldo;
-    };
+    Object.defineProperty(Conta.prototype, "saldo", {
+        get: function () {
+            return this._saldo;
+        },
+        enumerable: false,
+        configurable: true
+    });
     Conta.prototype.transferir = function (contaDestino, valor) {
         if (!this.sacar(valor)) {
             return false;
@@ -29,7 +33,7 @@ var Conta = /** @class */ (function () {
         return true;
     };
     Conta.prototype.toString = function () {
-        return "\n    Numero da conta: ".concat(this.numero, "\n    Nome do titular: ").concat(this.nome, "\n    Saldo em conta: ").concat(this.saldo, "\n    ");
+        return "\n    Numero da conta: ".concat(this.numero, "\n    Nome do titular: ").concat(this.nome, "\n    Saldo em conta: ").concat(this._saldo, "\n    ");
     };
     return Conta;
 }());

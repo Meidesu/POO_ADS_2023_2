@@ -57,7 +57,7 @@ function sacar() {
     var texto = "Conta n\u00E3o encontrada!!";
     if (conta != null) {
         conta.sacar(valorSaque);
-        texto = "\n  Saque feito com sucesso!!\n  Saldo atual: ".concat(conta.consultarSaldo(), "  \n  ");
+        texto = "\n  Saque feito com sucesso!!\n  Saldo atual: ".concat(conta.saldo, "  \n  ");
     }
     console.log('\n', texto);
 }
@@ -69,7 +69,7 @@ function depositar() {
     var texto = "Conta n\u00E3o encontrada!!";
     if (conta != null) {
         conta.depositar(valorDeposito);
-        texto = "\n  Deposito feito com sucesso!!\n  Saldo atual: ".concat(conta.consultarSaldo(), "  \n  ");
+        texto = "\n  Deposito feito com sucesso!!\n  Saldo atual: ".concat(conta.saldo, "  \n  ");
     }
     console.log('\n', texto);
 }
