@@ -1,6 +1,21 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Conta = void 0;
+exports.Poupanca = exports.Conta = void 0;
 var Conta = /** @class */ (function () {
     function Conta(numero, nome, saldo) {
         if (saldo === void 0) { saldo = 0; }
@@ -38,6 +53,27 @@ var Conta = /** @class */ (function () {
     return Conta;
 }());
 exports.Conta = Conta;
+var Poupanca = /** @class */ (function (_super) {
+    __extends(Poupanca, _super);
+    function Poupanca(numero, nome, taxa, saldo) {
+        if (saldo === void 0) { saldo = 0; }
+        var _this = _super.call(this, numero, nome, saldo) || this;
+        _this._taxaJuros = taxa;
+        return _this;
+    }
+    Object.defineProperty(Poupanca.prototype, "taxaJuros", {
+        get: function () {
+            return this._taxaJuros;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Poupanca.prototype.renderJuros = function () {
+        this.depositar(this.saldo * this._taxaJuros / 100);
+    };
+    return Poupanca;
+}(Conta));
+exports.Poupanca = Poupanca;
 /* let c1: Conta = new Conta("1", "ely", 100);
 let c2: Conta = new Conta("2", "joao", 200);
 let c3: Conta;

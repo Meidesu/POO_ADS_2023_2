@@ -1,4 +1,4 @@
-import {Conta} from './conta';
+import {Conta, Poupanca} from './conta';
 /*
 let conta1: Conta = new Conta("1", 0);
 let banco: Conta[] = [];
@@ -11,7 +11,7 @@ console.log(banco[10].saldo);
 */
 
 export class Banco {
-    private _contas: Conta[] = []
+    _contas: Conta[] = []
 
     public inserir(conta: Conta): void {      
       if ( this.consultar(conta.numero) == null){
@@ -107,8 +107,28 @@ export class Banco {
     public mediaSaldo (): number {
       return this.saldoBanco() / this.qtdContas()
     }
+
+    public renderJuros(numero: string): void {
+      let _contaProcurada: Conta|null = this.consultar(numero);
+
+      if ( _contaProcurada instanceof Poupanca ){
+        (<Poupanca> _contaProcurada).renderJuros();
+      }
+    }
 }
 
+
+/* let b: Banco = new Banco();
+
+b.inserir(new Poupanca("123", "meireles", 50, 100));
+b.inserir(new Conta("456", "meireles", 100));
+
+console.log(b.consultar("123"));
+console.log(b.consultar("456"));
+
+console.log(b.renderJuros("123"));
+console.log(b.consultar("123"));
+ */
 
 /* let b: Banco = new Banco();
 b.inserir(new Conta("11111-2", "ely", 100));

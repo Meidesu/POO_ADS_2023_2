@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Banco = void 0;
+var conta_1 = require("./conta");
 /*
 let conta1: Conta = new Conta("1", 0);
 let banco: Conta[] = [];
@@ -86,9 +87,26 @@ var Banco = /** @class */ (function () {
     Banco.prototype.mediaSaldo = function () {
         return this.saldoBanco() / this.qtdContas();
     };
+    Banco.prototype.renderJuros = function (numero) {
+        var _contaProcurada = this.consultar(numero);
+        if (_contaProcurada instanceof conta_1.Poupanca) {
+            _contaProcurada.renderJuros();
+        }
+    };
     return Banco;
 }());
 exports.Banco = Banco;
+/* let b: Banco = new Banco();
+
+b.inserir(new Poupanca("123", "meireles", 50, 100));
+b.inserir(new Conta("456", "meireles", 100));
+
+console.log(b.consultar("123"));
+console.log(b.consultar("456"));
+
+console.log(b.renderJuros("123"));
+console.log(b.consultar("123"));
+ */
 /* let b: Banco = new Banco();
 b.inserir(new Conta("11111-2", "ely", 100));
 //console.log(b.consultar("11111-2"));

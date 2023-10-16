@@ -44,6 +44,26 @@ export class Conta {
   }
 }
 
+export class Poupanca extends Conta {
+    private _taxaJuros: number;
+  
+    constructor(numero: string, nome: string, taxa: number, saldo: number = 0){
+        super(numero, nome, saldo);
+        this._taxaJuros = taxa;
+    }
+
+    
+    public get taxaJuros() : number {
+        return this._taxaJuros;
+    }
+
+    public renderJuros(): void {
+        this.depositar(this.saldo * this._taxaJuros/100);
+    }   
+    
+  }
+  
+
 /* let c1: Conta = new Conta("1", "ely", 100);
 let c2: Conta = new Conta("2", "joao", 200);
 let c3: Conta;
