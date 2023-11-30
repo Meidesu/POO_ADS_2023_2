@@ -3,12 +3,12 @@ import { Banco } from "../05_exercicio/banco";
 import { Conta } from "../05_exercicio/conta";
 import { Input } from "../05_exercicio/Input";
 
+// Testes questão 13
+
 let banco: Banco = new Banco();
 
 let c1: Conta = new Conta("1", "Mei");
 let c2: Conta = new Conta("1", "Liv");
-
-let numpos: number = Input.inputNumberPositive("Digite um número positivo: ");
 
 banco.inserir(c1);
 banco.depositar("1", 100);

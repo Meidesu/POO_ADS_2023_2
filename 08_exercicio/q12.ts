@@ -1,6 +1,8 @@
 import { Banco } from "../05_exercicio/banco";
 import { Conta, Poupanca } from "../05_exercicio/conta";
 
+// Testes questão 12
+
 let banco: Banco = new Banco();
 
 banco.inserir(new Poupanca("1", "Mei", 0.5));

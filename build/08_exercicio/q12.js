@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var banco_1 = require("../05_exercicio/banco");
 var conta_1 = require("../05_exercicio/conta");
+// Testes questão 12
 var banco = new banco_1.Banco();
 banco.inserir(new conta_1.Poupanca("1", "Mei", 0.5));
 banco.depositar("1", 100);
