@@ -16,22 +16,27 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Poupanca = exports.Conta = void 0;
+var AplicacaoError_1 = require("./Exceptions/AplicacaoError");
 var Conta = /** @class */ (function () {
     function Conta(numero, nome, saldo) {
         if (saldo === void 0) { saldo = 0; }
         this.numero = numero;
         this.nome = nome;
-        this._saldo = saldo;
+        this.depositar(saldo);
     }
     Conta.prototype.depositar = function (valor) {
+        this.validarValor(valor);
+        if (!this._saldo) {
+            this._saldo = 0;
+        }
         this._saldo = this._saldo + valor;
     };
     Conta.prototype.sacar = function (valor) {
-        if (this._saldo - valor < 0) {
-            return false;
+        this.validarValor(valor);
+        if (this._saldo < valor) {
+            throw new AplicacaoError_1.SaldoIsuficienteError(" \nSaldo insuficiente!!\nO valor a ser sacado é maior que o saldo disponível.\n");
         }
         this._saldo = this._saldo - valor;
-        return true;
     };
     Object.defineProperty(Conta.prototype, "saldo", {
         get: function () {
@@ -41,14 +46,16 @@ var Conta = /** @class */ (function () {
         configurable: true
     });
     Conta.prototype.transferir = function (contaDestino, valor) {
-        if (!this.sacar(valor)) {
-            return false;
-        }
+        this.sacar(valor);
         contaDestino.depositar(valor);
-        return true;
     };
     Conta.prototype.toString = function () {
         return "\n    Numero da conta: ".concat(this.numero, "\n    Nome do titular: ").concat(this.nome, "\n    Saldo em conta: ").concat(this._saldo, "\n    ");
+    };
+    Conta.prototype.validarValor = function (valor) {
+        if (valor < 0) {
+            throw new AplicacaoError_1.AplicacaoError(" \nValor inválido!!\nO valor não pode ser negativo.\n");
+        }
     };
     return Conta;
 }());

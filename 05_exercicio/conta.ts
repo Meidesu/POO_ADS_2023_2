@@ -1,68 +1,81 @@
+import { AplicacaoError, SaldoInvalidoError, SaldoIsuficienteError } from "./Exceptions/AplicacaoError";
+
 export class Conta {
-  numero: string;
-  nome: string
-  private _saldo: number;
+    numero: string;
+    nome: string
+    private _saldo!: number;
 
-  constructor(numero: string, nome: string, saldo: number = 0) {
-      this.numero = numero;
-      this.nome = nome;
-      this._saldo = saldo;
-  }
+    constructor(numero: string, nome: string, saldo: number = 0) {
+        this.numero = numero;
+        this.nome = nome;
+        this.depositar(saldo);
+    }
 
-  public depositar(valor: number): void {
-      this._saldo = this._saldo + valor;
-  }
+    public depositar(valor: number): void {
 
-  public sacar(valor: number): boolean {
-      if (this._saldo - valor < 0) {
-          return false;
-      }
+        this.validarValor(valor);
+        
+        if ( !this._saldo ) {
+            this._saldo = 0;
+        }
+        
+        this._saldo = this._saldo + valor;
+    }
 
-      this._saldo = this._saldo - valor;
-      return true;
-  }
+    public sacar(valor: number): void {
 
-  public get saldo(): number {
-      return this._saldo;
-  }
+        this.validarValor(valor);
 
-  public transferir(contaDestino: Conta, valor: number): boolean {
-      if (!this.sacar(valor)) {
-          return false;
-      }
+        if (this._saldo < valor) {
+            throw new SaldoIsuficienteError(" \nSaldo insuficiente!!\nO valor a ser sacado é maior que o saldo disponível.\n")
+        }
 
-      contaDestino.depositar(valor);
-      return true;
-  }
+        this._saldo = this._saldo - valor;
+    }
 
-  public toString () {
-    return `
+    public get saldo(): number {
+        return this._saldo;
+    }
+
+    public transferir(contaDestino: Conta, valor: number): void {
+        this.sacar(valor)
+        contaDestino.depositar(valor);
+    }
+
+    public toString() {
+        return `
     Numero da conta: ${this.numero}
     Nome do titular: ${this.nome}
     Saldo em conta: ${this._saldo}
     `
-  }
+    }
+
+    public validarValor(valor: number): void {
+        if (valor < 0) {
+            throw new AplicacaoError(" \nValor inválido!!\nO valor não pode ser negativo.\n");
+        }
+    }
 }
 
 export class Poupanca extends Conta {
     private _taxaJuros: number;
-  
-    constructor(numero: string, nome: string, taxa: number, saldo: number = 0){
+
+    constructor(numero: string, nome: string, taxa: number, saldo: number = 0) {
         super(numero, nome, saldo);
         this._taxaJuros = taxa;
     }
 
-    
-    public get taxaJuros() : number {
+
+    public get taxaJuros(): number {
         return this._taxaJuros;
     }
 
     public renderJuros(): void {
-        this.depositar(this.saldo * this._taxaJuros/100);
-    }   
-    
-  }
-  
+        this.depositar(this.saldo * this._taxaJuros / 100);
+    }
+
+}
+
 
 /* let c1: Conta = new Conta("1", "ely", 100);
 let c2: Conta = new Conta("2", "joao", 200);

@@ -1,16 +1,15 @@
 import { question } from "readline-sync";
-import { Banco } from "./banco";
+import { Banco } from './banco';
 import { Conta, Poupanca } from "./conta";
-import { readFileSync } from "fs-extra";
+import { importFiles, input, inputNumberPositive, limparTela, obterOpcao } from "./utils";
 
-// let input = question();
 let b: Banco = new Banco();
-let opcao: String = '';
+let opcao: number = 0;
 
 do {
-  console.clear()
 
-  let menu = `
+  try {
+    let menu = `
   Bem vindo!!
   
   Digite uma opção:
@@ -23,52 +22,65 @@ do {
   7 - Transferir
   8 - Totalizações
   9 - Render Juros
-  10 - Carregar contas
   0 - Sair
   `
-
-  console.log(menu);
   
-  opcao = question(" >> ");
+    opcao = obterOpcao(menu);
 
-  console.clear();
-  switch (opcao) {
-    case "1":
-      inserirConta();
-      break;
-    case "2":
-      inserirPoupanca();
-      break;
-    case "3":
-      consultar();
-      break;
-    
-    case "4":
-      sacar();
-      break;
-
-    case "5":
-      depositar();
-      break;
-
-    case "9":
-      console.log(b._contas);
+    limparTela();
+    switch (opcao) {
+      case 1:
+        inserirConta();
+        break;
+      case 2:
+        inserirPoupanca();
+        break;
+      case 3:
+        consultar();
+        break;
       
-      break;
+      case 4:
+        sacar();
+        break;
 
-    case "10":
-      carregarContas();
-      break;
+      case 5:
+        depositar();
+        break;
+
+      case 6:
+        excluir();
+        break;
+
+      case 7:
+        transferir();        
+        break;
+
+      case 8:
+        totalizar();
+        break;
+
+      case 9:
+        renderJuros();
+        break;
+
+      default:
+        console.log("Opção inválida!!");
+        break;
+    }
+  } catch (error: any) {
+    console.log(`\n${error.message}`);    
+
+  } finally {
+    question("\n Operacao finalizada.\n Press <enter>", {hideEchoBack: true, mask: ''});
   }
-  
-  question("\n Operacao finalizada.\n Press <enter>");
-} while (opcao != "0");
+
+} while (opcao != 0);
 
 function inserirConta(): void {
   console.log("\n Cadastrar conta\n");
 
-  let numero: string = question(' Digite o número da conta:');
-  let nome: string = question(' Nome do titular: ');
+  let numero: string = input(' Digite o número da conta(xxxxx-x): ');
+  let nome: string = input(' Nome do titular: ');
   let conta: Conta;
 
   conta = new Conta(numero, nome);
@@ -78,9 +90,9 @@ function inserirConta(): void {
 function inserirPoupanca(): void {
   console.log("\n Cadastrar conta poupança\n");
 
-  let numero: string = question(' Digite o número da conta:');
-  let nome: string = question(' Nome do titular: ');
-  let taxa: number = Number(question(' Taxa de juros: '));
+  let numero: string = input(' Digite o número da conta(xxxxx-x): ');
+  let nome: string = input(' Nome do titular: ');
+  let taxa: number = inputNumberPositive(' Taxa de juros: ');
   let conta: Poupanca = new Poupanca(numero, nome, taxa);
 
   b.inserir(conta);
@@ -91,7 +103,7 @@ function consultar() {
 
   console.log(' Consultar conta\n');
 
-  let numConta: string = question(' Informe o numero da conta: ');
+  let numConta: string = input(' Informe o numero da conta(xxxxx-x): ');
   let conta: Conta|null = b.consultar(numConta);
   
   let texto = `Conta não encontrada!!`
@@ -108,44 +120,29 @@ function sacar() {
   // console.clear();
   console.log(' Sacar valor');
   
-  let numConta: string = question(' Informe o numero da conta: ');
-  let valorSaque: number = Number(question(' Valor a sacar: '))
-
+  let numConta: string = input(' Informe o numero da conta(xxxxx-x): ');
   let conta: Conta|null = b.consultar(numConta);
-  let texto = `Conta não encontrada!!`
 
-  if ( conta != null ){
-    conta.sacar(valorSaque)
-
-    texto = `
-  Saque feito com sucesso!!
-  Saldo atual: ${conta.saldo}  
-  `
-  } 
-
-  console.log('\n', texto);
+  let valorSaque: number = inputNumberPositive(' Valor a sacar: ');
   
+  b.sacar(numConta, valorSaque);
+  // conta.sacar(valorSaque);
+
+  console.log(` Saque feito com sucesso!!\n Saldo atual: ${conta.saldo}`);
+
 }
 
 function depositar() {
   console.log(' Depositar valor');
   
-  let numConta: string = question(' Informe o numero da conta: ');
-  let valorDeposito: number = Number(question(' Valor do deposito: '));
-
+  let numConta: string = input(' Informe o numero da conta: ');
   let conta: Conta|null = b.consultar(numConta);
-  let texto = `Conta não encontrada!!`;
 
-  if ( conta != null ){
-    conta.depositar(valorDeposito);
+  let valorDeposito: number = inputNumberPositive(' Valor do deposito: ');
 
-    texto = `
-  Deposito feito com sucesso!!
-  Saldo atual: ${conta.saldo}  
-  `;
-  } 
+  b.depositar(numConta, valorDeposito);
 
-  console.log('\n', texto);
+  console.log(`Deposito feito com sucesso!!\nSaldo atual: ${conta.saldo}`);
 }
 
 function carregarContas() {
@@ -173,8 +170,51 @@ function carregarContas() {
   }
 }
 
-export function importFiles(path: string): string[] {
-  const dados = readFileSync(path, 'utf-8')
- 
-  return dados.split('\n') 
+function excluir() {
+  console.log(' Excluir conta');
+  
+  let numConta: string = input(' Informe o numero da conta: ');
+
+  b.consultar(numConta);
+  b.excluir(numConta);
+
+  console.log(`Conta excluida com sucesso!!`);
 }
+
+function transferir() {
+  console.log(' Transferir valor');
+  
+  let numContaOrigem: string = input(' Informe o numero da conta de origem: ');
+  b.consultar(numContaOrigem);
+
+  let numContaDestino: string = input(' Informe o numero da conta de destino: ');
+  b.consultar(numContaDestino);
+
+  let valorTransferencia: number = inputNumberPositive(' Valor a transferir: ');
+
+  b.transferir(numContaDestino, numContaOrigem, valorTransferencia);
+
+  console.log(`Transferencia feita com sucesso!!`);
+
+}
+
+function totalizar() {
+  console.log(' Totalizações');
+  
+  console.log(`\nTotal de contas: ${b.qtdContas()}`);
+  console.log(`Total de saldo: ${b.saldoBanco()}`);
+  console.log(`Média de saldo: ${b.mediaSaldo().toFixed(2)}`);
+}
+
+function renderJuros() {
+  console.log(' Render juros');
+  
+  let numConta: string = input(' Informe o numero da conta: ');
+  b.consultar(numConta);
+
+  b.renderJuros(numConta);
+
+  console.log(`Juros aplicados com sucesso!!`);
+
+}
+

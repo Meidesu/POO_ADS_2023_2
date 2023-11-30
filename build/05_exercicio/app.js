@@ -1,64 +1,76 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.importFiles = void 0;
 var readline_sync_1 = require("readline-sync");
 var banco_1 = require("./banco");
 var conta_1 = require("./conta");
-var fs_extra_1 = require("fs-extra");
-// let input = question();
+var utils_1 = require("./utils");
 var b = new banco_1.Banco();
-var opcao = '';
+var opcao = 0;
 do {
-    console.clear();
-    var menu = "\n  Bem vindo!!\n  \n  Digite uma op\u00E7\u00E3o:\n  1 - Cadastrar\n  2 - Cadastrar Poupan\u00E7a\n  3 - Consultar \n  4 - Sacar\n  5 - Depositar \n  6 - Excluir\n  7 - Transferir\n  8 - Totaliza\u00E7\u00F5es\n  9 - Render Juros\n  10 - Carregar contas\n  0 - Sair\n  ";
-    console.log(menu);
-    opcao = (0, readline_sync_1.question)(" >> ");
-    console.clear();
-    switch (opcao) {
-        case "1":
-            inserirConta();
-            break;
-        case "2":
-            inserirPoupanca();
-            break;
-        case "3":
-            consultar();
-            break;
-        case "4":
-            sacar();
-            break;
-        case "5":
-            depositar();
-            break;
-        case "9":
-            console.log(b._contas);
-            break;
-        case "10":
-            carregarContas();
-            break;
+    try {
+        var menu = "\n  Bem vindo!!\n  \n  Digite uma op\u00E7\u00E3o:\n  1 - Cadastrar\n  2 - Cadastrar Poupan\u00E7a\n  3 - Consultar \n  4 - Sacar\n  5 - Depositar \n  6 - Excluir\n  7 - Transferir\n  8 - Totaliza\u00E7\u00F5es\n  9 - Render Juros\n  0 - Sair\n  ";
+        opcao = (0, utils_1.obterOpcao)(menu);
+        (0, utils_1.limparTela)();
+        switch (opcao) {
+            case 1:
+                inserirConta();
+                break;
+            case 2:
+                inserirPoupanca();
+                break;
+            case 3:
+                consultar();
+                break;
+            case 4:
+                sacar();
+                break;
+            case 5:
+                depositar();
+                break;
+            case 6:
+                excluir();
+                break;
+            case 7:
+                transferir();
+                break;
+            case 8:
+                totalizar();
+                break;
+            case 9:
+                renderJuros();
+                break;
+            default:
+                console.log("Opção inválida!!");
+                break;
+        }
     }
-    (0, readline_sync_1.question)("\n Operacao finalizada.\n Press <enter>");
-} while (opcao != "0");
+    catch (error) {
+        console.log("\n".concat(error.message));
+    }
+    finally {
+        (0, readline_sync_1.question)("\n Operacao finalizada.\n Press <enter>", { hideEchoBack: true, mask: '' });
+    }
+} while (opcao != 0);
 function inserirConta() {
     console.log("\n Cadastrar conta\n");
-    var numero = (0, readline_sync_1.question)(' Digite o número da conta:');
-    var nome = (0, readline_sync_1.question)(' Nome do titular: ');
+    var numero = (0, utils_1.input)(' Digite o número da conta(xxxxx-x): ');
+    var nome = (0, utils_1.input)(' Nome do titular: ');
     var conta;
     conta = new conta_1.Conta(numero, nome);
     b.inserir(conta);
 }
 function inserirPoupanca() {
     console.log("\n Cadastrar conta poupança\n");
-    var numero = (0, readline_sync_1.question)(' Digite o número da conta:');
-    var nome = (0, readline_sync_1.question)(' Nome do titular: ');
-    var taxa = Number((0, readline_sync_1.question)(' Taxa de juros: '));
+    var numero = (0, utils_1.input)(' Digite o número da conta(xxxxx-x): ');
+    var nome = (0, utils_1.input)(' Nome do titular: ');
+    var taxa = (0, utils_1.inputNumberPositive)(' Taxa de juros: ');
     var conta = new conta_1.Poupanca(numero, nome, taxa);
     b.inserir(conta);
 }
 function consultar() {
     // console.clear();
     console.log(' Consultar conta\n');
-    var numConta = (0, readline_sync_1.question)(' Informe o numero da conta: ');
+    var numConta = (0, utils_1.input)(' Informe o numero da conta(xxxxx-x): ');
     var conta = b.consultar(numConta);
     var texto = "Conta n\u00E3o encontrada!!";
     if (conta != null) {
@@ -70,30 +82,23 @@ function consultar() {
 function sacar() {
     // console.clear();
     console.log(' Sacar valor');
-    var numConta = (0, readline_sync_1.question)(' Informe o numero da conta: ');
-    var valorSaque = Number((0, readline_sync_1.question)(' Valor a sacar: '));
+    var numConta = (0, utils_1.input)(' Informe o numero da conta(xxxxx-x): ');
     var conta = b.consultar(numConta);
-    var texto = "Conta n\u00E3o encontrada!!";
-    if (conta != null) {
-        conta.sacar(valorSaque);
-        texto = "\n  Saque feito com sucesso!!\n  Saldo atual: ".concat(conta.saldo, "  \n  ");
-    }
-    console.log('\n', texto);
+    var valorSaque = (0, utils_1.inputNumberPositive)(' Valor a sacar: ');
+    b.sacar(numConta, valorSaque);
+    // conta.sacar(valorSaque);
+    console.log(" Saque feito com sucesso!!\n Saldo atual: ".concat(conta.saldo));
 }
 function depositar() {
     console.log(' Depositar valor');
-    var numConta = (0, readline_sync_1.question)(' Informe o numero da conta: ');
-    var valorDeposito = Number((0, readline_sync_1.question)(' Valor do deposito: '));
+    var numConta = (0, utils_1.input)(' Informe o numero da conta: ');
     var conta = b.consultar(numConta);
-    var texto = "Conta n\u00E3o encontrada!!";
-    if (conta != null) {
-        conta.depositar(valorDeposito);
-        texto = "\n  Deposito feito com sucesso!!\n  Saldo atual: ".concat(conta.saldo, "  \n  ");
-    }
-    console.log('\n', texto);
+    var valorDeposito = (0, utils_1.inputNumberPositive)(' Valor do deposito: ');
+    b.depositar(numConta, valorDeposito);
+    console.log("Deposito feito com sucesso!!\nSaldo atual: ".concat(conta.saldo));
 }
 function carregarContas() {
-    var lines = importFiles("./contas.txt");
+    var lines = (0, utils_1.importFiles)("./contas.txt");
     for (var _i = 0, lines_1 = lines; _i < lines_1.length; _i++) {
         var line = lines_1[_i];
         if (!line)
@@ -112,8 +117,33 @@ function carregarContas() {
         }
     }
 }
-function importFiles(path) {
-    var dados = (0, fs_extra_1.readFileSync)(path, 'utf-8');
-    return dados.split('\n');
+function excluir() {
+    console.log(' Excluir conta');
+    var numConta = (0, utils_1.input)(' Informe o numero da conta: ');
+    b.consultar(numConta);
+    b.excluir(numConta);
+    console.log("Conta excluida com sucesso!!");
 }
-exports.importFiles = importFiles;
+function transferir() {
+    console.log(' Transferir valor');
+    var numContaOrigem = (0, utils_1.input)(' Informe o numero da conta de origem: ');
+    b.consultar(numContaOrigem);
+    var numContaDestino = (0, utils_1.input)(' Informe o numero da conta de destino: ');
+    b.consultar(numContaDestino);
+    var valorTransferencia = (0, utils_1.inputNumberPositive)(' Valor a transferir: ');
+    b.transferir(numContaDestino, numContaOrigem, valorTransferencia);
+    console.log("Transferencia feita com sucesso!!");
+}
+function totalizar() {
+    console.log(' Totalizações');
+    console.log("\nTotal de contas: ".concat(b.qtdContas()));
+    console.log("Total de saldo: ".concat(b.saldoBanco()));
+    console.log("M\u00E9dia de saldo: ".concat(b.mediaSaldo().toFixed(2)));
+}
+function renderJuros() {
+    console.log(' Render juros');
+    var numConta = (0, utils_1.input)(' Informe o numero da conta: ');
+    b.consultar(numConta);
+    b.renderJuros(numConta);
+    console.log("Juros aplicados com sucesso!!");
+}
